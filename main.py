@@ -2,7 +2,9 @@ import pygame as pg
 
 from field import Field
 from utils import colors
-from shapes import Shape
+from shape import Shape
+
+from screen_utils import game_over_screen
 
 
 def main():
@@ -26,7 +28,7 @@ def main():
     ticks = 0
     speed = 30
 
-    # background_image = pg.image.load()
+    background_image = pg.image.load('./data/assets/bg.jpg')
 
     running = True
     shape = Shape(field)
@@ -48,7 +50,18 @@ def main():
                     shape.drop()
 
         screen.fill(colors.get('black'))
+        # screen.blit(background_image, (0, 0))
         field.render(screen)
+
+        # shape.detect_collisions()
+
+        if shape.collided:
+
+            if shape.game_over():
+                screen.fill(colors.get('black'))
+                game_over_screen(size, screen, timer, FPS)
+
+            shape = Shape(field)
 
         if ticks >= speed:
             shape.fall()

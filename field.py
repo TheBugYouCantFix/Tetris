@@ -24,6 +24,12 @@ class Field:
         if row in range(self.HEIGHT) and col in range(self.WIDTH):
             self.field[row][col] = value
 
+    def get_cell(self, row, col,):
+        if row in range(self.HEIGHT) and col in range(self.WIDTH):
+            return self.field[row][col]
+
+        return "Invalid coordinates"
+
     def is_empty(self, row, col) -> bool:
         return bool(self.field[row][col])
 
@@ -40,9 +46,8 @@ class Field:
                         self.cell_size)
 
                 cell = self.field[y][x]
-                cell_color = pg.Color(0, 255, 8)
 
-                if cell == Cell.FILLED:
-                    pg.draw.rect(screen, cell_color, bbox)
+                if cell != Cell.EMPTY:
+                    pg.draw.rect(screen, cell, bbox)
 
                 pg.draw.rect(screen, border_color, bbox, line_size)
