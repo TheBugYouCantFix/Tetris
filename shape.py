@@ -11,6 +11,10 @@ class Shape:
         Square, Line, ThreeOne, OneThree, OneThreeMirrored, TwoTwo, TwoTwoMirrored
     )
 
+    for shape in SHAPES:
+        shape.START_POS = shape.FIELD
+        shape.START_WIDTH, shape.START_HEIGHT = shape.WIDTH, shape.HEIGHT
+
     def __init__(self, field):
         self.shape = choice(self.SHAPES)()
         self.field = field
@@ -38,9 +42,6 @@ class Shape:
         for row, col in self.coordinates:
             self.field.set_cell(row, col, Cell.EMPTY)
 
-    def get_shape(self):
-        return self.shape
-
     def move(func):
         def wrap(self, *args, **kwargs):
             self.erase_previous_pos()
@@ -49,23 +50,39 @@ class Shape:
 
         return wrap
 
-    def cell_collides(self, row, col):
+    def bottom_collisions(self, row, col):
+        # print(row + 1 == self.row + self.shape.HEIGHT or
+        #         self.shape.FIELD[row - self.row + 1][col - self.col] == Cell.EMPTY)
         return self.field.get_cell(row, col) != Cell.EMPTY and \
-                        self.field.get_cell(row + 1, col) != Cell.EMPTY and \
-                        (row + 1 == self.row + self.shape.HEIGHT or
-                         self.shape.FIELD[row - self.row + 1][col - self.col] == Cell.EMPTY)
+               self.field.get_cell(row + 1, col) != Cell.EMPTY and \
+               (row == self.row + self.shape.HEIGHT - 1 or
+                self.shape.FIELD[row - self.row + 1][col - self.col] == Cell.EMPTY)
 
-    def cell_collisions_detected(self):
+    def side_collisions(self):
+        for i in range(self.row, self.row + self.shape.HEIGHT):
+            if self.field.get_cell(self.col, i) != Cell.EMPTY:
+
+                # left collision
+                if self.field.get_cell(i, self.col - 1) != Cell.EMPTY:
+                    print('left')
+                    return 'left'
+
+                # right collision
+                elif self.field.get_cell(i, self.col + self.shape.WIDTH + 1) != Cell.EMPTY:
+                    print('right')
+                    return 'right'
+
+    def shape_collisions_detected(self):
         for i in range(self.row, self.row + self.shape.HEIGHT):
             for j in range(self.col, self.col + self.shape.WIDTH):
-                if self.cell_collides(i, j):
+                if self.bottom_collisions(i, j):
                     return True
 
         return False
 
     def fall(self):
         if self.row + self.shape.HEIGHT < self.field.HEIGHT and \
-                not self.cell_collisions_detected():
+                not self.shape_collisions_detected():
             self.erase_previous_pos()
             self.row += 1
             self.set_shape()
@@ -75,12 +92,13 @@ class Shape:
     @move
     def move_right(self):
         if self.col + self.shape.WIDTH < self.field.WIDTH and \
-                self.field.get_cell(self.row, self.col + self.shape.WIDTH) == Cell.EMPTY:
+                self.side_collisions() != 'right':
             self.col += 1
 
     @move
     def move_left(self):
-        if self.col - 1 >= 0:
+        if self.col - 1 >= 0 and \
+                self.side_collisions() != 'left':
             self.col -= 1
 
     def drop(self):
@@ -89,15 +107,17 @@ class Shape:
 
         self.collided = True
 
-    def detect_collisions(self):
-        for i in range(self.row, self.row + self.shape.HEIGHT):
-            for j in range(self.col, self.col + self.shape.WIDTH):
-                if self.field.get_cell(i, j) != Cell.EMPTY and \
-                        self.field.get_cell(i + 1, j) != Cell.EMPTY:
-                    self.collided = True
+    def rotate_90deg_clockwise(self):
+        shape_type = type(self.shape)
+        shape_type.FIELD = list(zip(*shape_type.FIELD[::-1]))
+        shape_type.WIDTH, shape_type.HEIGHT = shape_type.HEIGHT, shape_type.WIDTH
+        self.erase_previous_pos()
+        self.set_shape()
 
-    def turn_90deg_clockwise(self):
-        pass
+    def normalize_position(self):
+        shape_type = type(self.shape)
+        shape_type.WIDTH, shape_type.HEIGHT = shape_type.START_WIDTH, shape_type.START_HEIGHT
+        shape_type.FIELD = shape_type.START_POS
 
     def game_over(self):
         for i in range(self.col, self.col + self.shape.WIDTH):

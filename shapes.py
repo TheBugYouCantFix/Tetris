@@ -13,10 +13,10 @@ class Square:
     COLOR = colors.get('light yellow')
     WIDTH, HEIGHT = 2, 2
 
-    FIELD = (
-        (Cell.FILLED, Cell.FILLED),
-        (Cell.FILLED, Cell.FILLED)
-    )
+    FIELD = [
+        [Cell.FILLED, Cell.FILLED],
+        [Cell.FILLED, Cell.FILLED]
+    ]
 
 
 class Line:
@@ -26,24 +26,24 @@ class Line:
     WIDTH, HEIGHT = 4, 1
 
     FIELD = [
-        (Cell.FILLED, Cell.FILLED,
-         Cell.FILLED, Cell.FILLED)
+        [Cell.FILLED, Cell.FILLED,
+         Cell.FILLED, Cell.FILLED]
     ]
 
 
 class ThreeOne:
     """
-    ***
-    _*_
+    * * *
+    _ * _
     """
 
     COLOR = colors.get('purple')
     WIDTH, HEIGHT = 3, 2
 
-    FIELD = (
-        (Cell.FILLED, Cell.FILLED, Cell.FILLED),
-        (Cell.EMPTY, Cell.FILLED, Cell.EMPTY)
-    )
+    FIELD = [
+        [Cell.FILLED, Cell.FILLED, Cell.FILLED],
+        [Cell.EMPTY, Cell.FILLED, Cell.EMPTY]
+    ]
 
 
 class OneThree:
@@ -55,11 +55,10 @@ class OneThree:
     COLOR = colors.get('orange')
     WIDTH, HEIGHT = 3, 2
 
-    FIELD = (
-        (Cell.EMPTY, Cell.EMPTY, Cell.FILLED),
-        (Cell.FILLED, Cell.FILLED, Cell.FILLED)
-    )
-
+    FIELD = [
+        [Cell.EMPTY, Cell.EMPTY, Cell.FILLED],
+        [Cell.FILLED, Cell.FILLED, Cell.FILLED]
+    ]
 
 class OneThreeMirrored:
     """
@@ -70,10 +69,10 @@ class OneThreeMirrored:
     COLOR = colors.get('light green')
     WIDTH, HEIGHT = 3, 2
 
-    FIELD = (
-        (Cell.FILLED, Cell.EMPTY, Cell.EMPTY),
-        (Cell.FILLED, Cell.FILLED, Cell.FILLED)
-    )
+    FIELD = [
+        [Cell.FILLED, Cell.EMPTY, Cell.EMPTY],
+        [Cell.FILLED, Cell.FILLED, Cell.FILLED]
+    ]
 
 
 class TwoTwo:
@@ -85,10 +84,10 @@ class TwoTwo:
     COLOR = colors.get('dark green')
     WIDTH, HEIGHT = 3, 2
 
-    FIELD = (
-        (Cell.EMPTY, Cell.FILLED, Cell.FILLED),
-        (Cell.FILLED, Cell.FILLED, Cell.EMPTY)
-    )
+    FIELD = [
+        [Cell.EMPTY, Cell.FILLED, Cell.FILLED],
+        [Cell.FILLED, Cell.FILLED, Cell.EMPTY]
+    ]
 
 
 class TwoTwoMirrored:
@@ -100,7 +99,26 @@ class TwoTwoMirrored:
     COLOR = colors.get('red')
     WIDTH, HEIGHT = 3, 2
 
-    FIELD = (
-        (Cell.FILLED, Cell.FILLED, Cell.EMPTY),
-        (Cell.EMPTY, Cell.FILLED, Cell.FILLED)
-    )
+    FIELD = [
+        [Cell.FILLED, Cell.FILLED, Cell.EMPTY],
+        [Cell.EMPTY, Cell.FILLED, Cell.FILLED]
+    ]
+
+
+
+"""
+1) 
+1 0
+1 0
+1 1
+
+2) 
+1 1 1
+1 0 0
+
+3) 
+
+4)
+
+
+"""

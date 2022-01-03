@@ -46,6 +46,8 @@ def main():
                     shape.move_left()
                 if key == pg.K_s or key == pg.K_DOWN:
                     shape.fall()
+                if key == pg.K_w or key == pg.K_UP:
+                    shape.rotate_90deg_clockwise()
                 if key == pg.K_SPACE:
                     shape.drop()
 
@@ -53,14 +55,13 @@ def main():
         # screen.blit(background_image, (0, 0))
         field.render(screen)
 
-        # shape.detect_collisions()
-
         if shape.collided:
 
             if shape.game_over():
                 screen.fill(colors.get('black'))
                 game_over_screen(size, screen, timer, FPS)
 
+            shape.normalize_position()
             shape = Shape(field)
 
         if ticks >= speed:
