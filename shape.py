@@ -44,15 +44,17 @@ class Shape:
 
     def move(func):
         def wrap(self, *args, **kwargs):
-            self.erase_previous_pos()
-            func(self, *args, **kwargs)
-            self.set_shape()
+            print(self.move_right)
+            if (func == self.move_right and self.side_collisions() != 'right') or \
+                    (func == self.move_left and self.side_collisions() != 'left'):
+                self.erase_previous_pos()
+                func(self, *args, **kwargs)
+                self.set_shape()
 
         return wrap
 
     def bottom_collisions(self, row, col):
-        # print(row + 1 == self.row + self.shape.HEIGHT or
-        #         self.shape.FIELD[row - self.row + 1][col - self.col] == Cell.EMPTY)
+        # TODO: make this fucking collision detection work perfectly
         return self.field.get_cell(row, col) != Cell.EMPTY and \
                self.field.get_cell(row + 1, col) != Cell.EMPTY and \
                (row == self.row + self.shape.HEIGHT - 1 or
@@ -60,17 +62,19 @@ class Shape:
 
     def side_collisions(self):
         for i in range(self.row, self.row + self.shape.HEIGHT):
-            if self.field.get_cell(self.col, i) != Cell.EMPTY:
+            for j in range(self.col, self.col + self.shape.WIDTH):
+                if self.field.get_cell(i, j) != Cell.EMPTY and \
+                        self.shape.FIELD[i - self.row][j - self.col] != Cell.EMPTY:
+                    # right collision
+                    if self.field.get_cell(i, j + 1) != Cell.EMPTY and \
+                            (j == self.col + self.shape.WIDTH - 1 or
+                             self.shape.FIELD[i - self.row][j - self.col + 1] == Cell.EMPTY):
+                        return 'right'
 
-                # left collision
-                if self.field.get_cell(i, self.col - 1) != Cell.EMPTY:
-                    print('left')
-                    return 'left'
-
-                # right collision
-                elif self.field.get_cell(i, self.col + self.shape.WIDTH + 1) != Cell.EMPTY:
-                    print('right')
-                    return 'right'
+                    # left collision
+                    elif self.field.get_cell(i, j - 1) != Cell.EMPTY and \
+                            (j == 0 or self.shape.FIELD[i - self.row][j - self.col - 1] == Cell.EMPTY):
+                        return 'left'
 
     def shape_collisions_detected(self):
         for i in range(self.row, self.row + self.shape.HEIGHT):
@@ -89,17 +93,19 @@ class Shape:
         else:
             self.collided = True
 
-    @move
     def move_right(self):
-        if self.col + self.shape.WIDTH < self.field.WIDTH and \
-                self.side_collisions() != 'right':
-            self.col += 1
+        if self.side_collisions() != 'right' and not self.collided:
+            self.erase_previous_pos()
+            if self.col + self.shape.WIDTH < self.field.WIDTH:
+                self.col += 1
+                self.set_shape()
 
-    @move
     def move_left(self):
-        if self.col - 1 >= 0 and \
-                self.side_collisions() != 'left':
-            self.col -= 1
+        if self.side_collisions() != 'left' and not self.collided:
+            self.erase_previous_pos()
+            if self.col - 1 >= 0:
+                self.col -= 1
+                self.set_shape()
 
     def drop(self):
         for i in range(self.field.HEIGHT):
