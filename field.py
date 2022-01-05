@@ -57,6 +57,34 @@ class Field:
             [Cell.EMPTY for _ in range(self.WIDTH)] for _ in range(self.HEIGHT)
         ]
 
+    def push_rows_down(self):
+        for i in range(self.HEIGHT - 1, 0, -1):
+            self.field[i] = self.field[i - 1]
+
+        self.field[0] = [Cell.EMPTY for _ in range(self.WIDTH)]
+
     def check_full_rows(self):
         # TODO: implement this function
-        pass
+        counter = 0
+        start = None
+
+        # detecting the amount of filled rows
+        for i in range(self.HEIGHT):
+            if all(j != Cell.EMPTY for j in self.field[i]):
+                if counter == 0:
+                    start = i
+
+                counter += 1
+
+            elif counter > 0:
+                break
+
+        if counter > 0:
+            # emptying the filled rows
+            for i in range(start, start + counter):
+                self.field[i] = [Cell.EMPTY for _ in range(self.WIDTH)]
+
+            for _ in range(counter):
+                self.push_rows_down()
+
+

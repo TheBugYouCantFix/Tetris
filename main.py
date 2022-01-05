@@ -54,13 +54,13 @@ def main():
         screen.fill(colors.get('black'))
         # screen.blit(background_image, (0, 0))
         field.render(screen)
+        field.check_full_rows()
 
         if shape.collided:
 
             if shape.game_over():
                 screen.fill(colors.get('black'))
                 game_over_screen(size, screen, timer, FPS, field)
-
             shape.normalize_position()
             shape = Shape(field)
 
