@@ -103,22 +103,3 @@ class TwoTwoMirrored:
         [Cell.FILLED, Cell.FILLED, Cell.EMPTY],
         [Cell.EMPTY, Cell.FILLED, Cell.FILLED]
     ]
-
-
-
-"""
-1) 
-1 0
-1 0
-1 1
-
-2) 
-1 1 1
-1 0 0
-
-3) 
-
-4)
-
-
-"""

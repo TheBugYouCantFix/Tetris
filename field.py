@@ -51,3 +51,7 @@ class Field:
                     pg.draw.rect(screen, cell, bbox)
 
                 pg.draw.rect(screen, border_color, bbox, line_size)
+
+    def check_full_rows(self):
+        # TODO: implement this function
+        pass
