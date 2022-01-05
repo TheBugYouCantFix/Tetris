@@ -1,4 +1,5 @@
 from random import choice
+from copy import deepcopy
 
 from cell import Cell
 from field import Field
@@ -42,23 +43,6 @@ class Shape:
         for row, col in self.coordinates:
             self.field.set_cell(row, col, Cell.EMPTY)
 
-    # def move(func):
-    #     def wrap(self, *args, **kwargs):
-    #         print(self.move_right)
-    #         if (func == self.move_right and self.side_collisions() != 'right') or \
-    #                 (func == self.move_left and self.side_collisions() != 'left'):
-    #             self.erase_previous_pos()
-    #             func(self, *args, **kwargs)
-    #             self.set_shape()
-    #
-    #     return wrap
-
-    def bottom_collisions(self, row, col):
-        return self.field.get_cell(row, col) != Cell.EMPTY and \
-               self.field.get_cell(row + 1, col) != Cell.EMPTY and \
-               (row == self.row + self.shape.HEIGHT - 1 or
-                self.shape.FIELD[row - self.row + 1][col - self.col] == Cell.EMPTY)
-
     def right_collision(self):
         for i in range(self.row, self.row + self.shape.HEIGHT):
             for j in range(self.col + 1, self.col + self.shape.WIDTH + 1):
@@ -80,6 +64,13 @@ class Shape:
                     return True
 
         return False
+
+    def bottom_collisions(self, row, col):
+        return self.field.get_cell(row, col) != Cell.EMPTY and \
+               self.field.get_cell(row + 1, col) != Cell.EMPTY and \
+               self.shape.FIELD[row - self.row][col - self.col] == Cell.FILLED and \
+               (row == self.row + self.shape.HEIGHT - 1 or
+                self.shape.FIELD[row - self.row + 1][col - self.col] == Cell.EMPTY)
 
     def shape_collisions_detected(self):
         for i in range(self.row, self.row + self.shape.HEIGHT):
@@ -118,12 +109,39 @@ class Shape:
 
         self.collided = True
 
+    @staticmethod
+    def rotated_arr(arr):
+        # rotates array 90 degrees clockwise
+        return list(zip(*arr[::-1]))
+
     def rotate_90deg_clockwise(self):
-        # TODO: write conditions checking if the shape is at the edge of the field and not rotate it, if so
         shape_type = type(self.shape)
-        shape_type.FIELD = list(zip(*shape_type.FIELD[::-1]))
+        old_position = deepcopy(shape_type.FIELD)
+
+        if shape_type.HEIGHT > shape_type.WIDTH and \
+                self.col + self.shape.WIDTH > self.field.WIDTH - (shape_type.HEIGHT - shape_type.WIDTH):
+            return
+
+        shape_type.FIELD = self.rotated_arr(shape_type.FIELD)
         shape_type.WIDTH, shape_type.HEIGHT = shape_type.HEIGHT, shape_type.WIDTH
+
         self.erase_previous_pos()
+
+        leave_loop = False
+
+        # checking if there are no collisions with other shapes after rotation
+        for i in range(self.row, self.row + self.shape.HEIGHT):
+            for j in range(self.col, self.col + self.shape.WIDTH):
+                if self.field.get_cell(i, j) != Cell.EMPTY and \
+                        self.shape.FIELD[i - self.row][j - self.col] == Cell.FILLED:
+                    shape_type.FIELD = old_position
+                    shape_type.WIDTH, shape_type.HEIGHT = shape_type.HEIGHT, shape_type.WIDTH
+                    leave_loop = True
+                    break
+
+            if leave_loop:
+                break
+
         self.set_shape()
 
     def normalize_position(self):

@@ -52,6 +52,11 @@ class Field:
 
                 pg.draw.rect(screen, border_color, bbox, line_size)
 
+    def clear(self):
+        self.field = [
+            [Cell.EMPTY for _ in range(self.WIDTH)] for _ in range(self.HEIGHT)
+        ]
+
     def check_full_rows(self):
         # TODO: implement this function
         pass

@@ -59,7 +59,7 @@ def main():
 
             if shape.game_over():
                 screen.fill(colors.get('black'))
-                game_over_screen(size, screen, timer, FPS)
+                game_over_screen(size, screen, timer, FPS, field)
 
             shape.normalize_position()
             shape = Shape(field)

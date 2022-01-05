@@ -9,7 +9,7 @@ def terminate():
     sys.exit()
 
 
-def game_over_screen(screen_size, screen, clock, fps):
+def game_over_screen(screen_size, screen, clock, fps, field):
     text = ["Game over"]
 
     font = pg.font.Font(None, 50)
@@ -28,6 +28,9 @@ def game_over_screen(screen_size, screen, clock, fps):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 terminate()
+            if event.type == pg.KEYDOWN:
+                field.clear()
+                return
 
         pg.display.flip()
         clock.tick(fps)
