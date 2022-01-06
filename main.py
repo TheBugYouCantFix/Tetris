@@ -72,8 +72,8 @@ def main():
         y = offset_y + 200
         show_parameter(screen, "Points", field.points, x, y)
 
-        y = offset_y + 250
-        show_parameter(screen, "Points", field.lines, x, y)
+        y = offset_y + 230
+        show_parameter(screen, "Lines", field.lines, x, y)
 
         if shape.collided:
 

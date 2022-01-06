@@ -50,7 +50,7 @@ def show_parameter(screen, name, parameter, x, y):
     rect.width += offset
     rect.height += offset
 
-    pg.draw.rect(screen, colors.get('white'), rect, 1)
+    # pg.draw.rect(screen, colors.get('white'), rect, 1)
 
     screen.blit(text_rendered, rect)
 
