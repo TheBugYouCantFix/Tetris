@@ -1,6 +1,8 @@
 from cell import Cell
 from utils import colors
 
+from random import choice
+
 # "*" = filled; "_" = empty
 
 
@@ -103,3 +105,12 @@ class TwoTwoMirrored:
         [Cell.FILLED, Cell.FILLED, Cell.EMPTY],
         [Cell.EMPTY, Cell.FILLED, Cell.FILLED]
     ]
+
+
+SHAPES = (
+        Square, Line, ThreeOne, OneThree, OneThreeMirrored, TwoTwo, TwoTwoMirrored
+    )
+
+
+def random_shape_type():
+    return choice(SHAPES)

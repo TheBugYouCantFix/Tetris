@@ -1,28 +1,28 @@
-from random import choice
 from copy import deepcopy
 
 from cell import Cell
 from field import Field
-
-from shapes import Square, Line, ThreeOne, OneThree, OneThreeMirrored, TwoTwo, TwoTwoMirrored
+from shapes import SHAPES
 
 
 class Shape:
-    SHAPES = (
-        Square, Line, ThreeOne, OneThree, OneThreeMirrored, TwoTwo, TwoTwoMirrored
-    )
 
     for shape in SHAPES:
         shape.START_POS = shape.FIELD
         shape.START_WIDTH, shape.START_HEIGHT = shape.WIDTH, shape.HEIGHT
 
-    def __init__(self, field):
-        self.shape = choice(self.SHAPES)()
+    def __init__(self, shape_type, field, next_type):
+        self.shape = shape_type()
         self.field = field
+
+        self.next_type = next_type
+
         self.collided = False
         self.coordinates = []
 
         self.row, self.col = 0, (Field.WIDTH - self.shape.WIDTH) // 2
+
+        self.field.points += 4  # 4 is the amount of cells in every shape
 
         self.set_shape()
 

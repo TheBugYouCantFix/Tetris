@@ -1,10 +1,16 @@
 import pygame as pg
 
+from shapes import\
+    SHAPES,\
+    Square, Line, ThreeOne, OneThree, OneThreeMirrored, TwoTwo, TwoTwoMirrored,\
+    random_shape_type
+
 from field import Field
 from utils import colors
 from shape import Shape
 
-from screen_utils import game_over_screen
+from screen_utils import \
+    game_over_screen, show_parameter, show_shape
 
 
 def main():
@@ -15,12 +21,12 @@ def main():
     size = Field.WIDTH * cell_size + 2 * offset, \
            Field.HEIGHT * cell_size + offset
 
-    offset_x, offset_y = offset, cell_size
+    offset_x, offset_y = offset // 5, cell_size
 
     screen = pg.display.set_mode(size)
     pg.display.set_caption('Tetris')
 
-    field = Field(cell_size, offset_x, offset_y)
+    field = Field(screen, cell_size, offset_x, offset_y)
 
     timer = pg.time.Clock()
     FPS = 60
@@ -31,7 +37,12 @@ def main():
     background_image = pg.image.load('./data/assets/bg.jpg')
 
     running = True
-    shape = Shape(field)
+
+    shape_type = random_shape_type()
+    next_shape_type = random_shape_type()
+
+    shape = Shape(shape_type, field, next_shape_type)
+
     while running:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -53,16 +64,32 @@ def main():
 
         screen.fill(colors.get('black'))
         # screen.blit(background_image, (0, 0))
-        field.render(screen)
-        field.check_full_rows()
+        field.render()
+
+        x, y = cell_size * field.WIDTH + offset_x + 20, offset_y + 50
+        show_shape(screen, next_shape_type, x, y, cell_size)
+
+        y = offset_y + 200
+        show_parameter(screen, "Points", field.points, x, y)
+
+        y = offset_y + 250
+        show_parameter(screen, "Points", field.lines, x, y)
 
         if shape.collided:
+
+            field.check_full_rows(shape)
 
             if shape.game_over():
                 screen.fill(colors.get('black'))
                 game_over_screen(size, screen, timer, FPS, field)
+
             shape.normalize_position()
-            shape = Shape(field)
+
+            # creating new shape and generating type of a next shape
+            shape_type = shape.next_type
+            next_shape_type = random_shape_type()
+
+            shape = Shape(shape_type, field, next_shape_type)
 
         if ticks >= speed:
             shape.fall()

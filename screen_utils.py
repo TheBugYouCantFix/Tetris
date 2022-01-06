@@ -2,6 +2,57 @@ import pygame as pg
 import sys
 
 from utils import load_image
+from utils import colors
+from cell import Cell
+
+
+def show_shape(screen, shape_type, x, y, cell_size):
+    offset = 20
+
+    color = shape_type.COLOR
+    border_color = colors.get('white')
+
+    for i in range(shape_type.HEIGHT):
+        for j in range(shape_type.WIDTH):
+
+            bbox = (
+                x + cell_size * j + offset,
+                y + cell_size * i + offset,
+                cell_size, cell_size
+            )
+
+            if shape_type.FIELD[i][j] == Cell.FILLED:
+                pg.draw.rect(screen, color, bbox)
+
+            pg.draw.rect(screen, border_color, bbox, 1)
+
+    pg.draw.rect(
+        screen, border_color, (
+            x, y,
+            cell_size * shape_type.WIDTH + 2 * offset,
+            cell_size * shape_type.HEIGHT + 2 * offset
+        ), 3
+    )
+
+
+def show_parameter(screen, name, parameter, x, y):
+    text = f"{name}: {parameter}"
+    font = pg.font.Font(None, 30)
+
+    text_rendered = font.render(text, 1, pg.Color('white'))
+
+    offset = 10
+
+    rect = text_rendered.get_rect()
+    rect.x = x - offset
+    rect.y = y - offset
+
+    rect.width += offset
+    rect.height += offset
+
+    pg.draw.rect(screen, colors.get('white'), rect, 1)
+
+    screen.blit(text_rendered, rect)
 
 
 def terminate():
@@ -34,4 +85,3 @@ def game_over_screen(screen_size, screen, clock, fps, field):
 
         pg.display.flip()
         clock.tick(fps)
-
