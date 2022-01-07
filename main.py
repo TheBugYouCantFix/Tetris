@@ -1,12 +1,9 @@
 import pygame as pg
 
-from shapes import\
-    SHAPES,\
-    Square, Line, ThreeOne, OneThree, OneThreeMirrored, TwoTwo, TwoTwoMirrored,\
-    random_shape_type
+from shapes import random_shape_type
 
 from field import Field
-from utils import colors
+from utils import colors, play_sound
 from shape import Shape
 
 from screen_utils import \
@@ -43,6 +40,8 @@ def main():
 
     shape = Shape(shape_type, field, next_shape_type)
 
+    play_sound('./data/sounds/start.mp3')
+
     while running:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -77,9 +76,13 @@ def main():
 
         if shape.collided:
 
+            if not shape.dropped:
+                play_sound('data/sounds/hit.mp3')
+
             field.check_full_rows(shape)
 
             if shape.game_over():
+                play_sound('data/sounds/game_over.wav')
                 screen.fill(colors.get('black'))
                 game_over_screen(size, screen, timer, FPS, field)
 

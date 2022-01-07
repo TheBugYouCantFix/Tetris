@@ -1,7 +1,7 @@
 import pygame as pg
 
 from cell import Cell
-from utils import colors
+from utils import colors, play_sound
 
 from time import sleep
 
@@ -119,6 +119,8 @@ class Field:
 
             for _ in range(counter):
                 self.push_rows_down(start + counter - 1)
+
+            play_sound('data/sounds/drop.wav')
 
             self.points += self.n_points(counter)
             self.lines += counter

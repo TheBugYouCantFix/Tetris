@@ -12,8 +12,8 @@ def show_shape(screen, shape_type, x, y, cell_size):
     color = shape_type.COLOR
     border_color = colors.get('white')
 
-    for i in range(shape_type.HEIGHT):
-        for j in range(shape_type.WIDTH):
+    for i in range(shape_type.START_HEIGHT):
+        for j in range(shape_type.START_WIDTH):
 
             bbox = (
                 x + cell_size * j + offset,
@@ -21,7 +21,7 @@ def show_shape(screen, shape_type, x, y, cell_size):
                 cell_size, cell_size
             )
 
-            if shape_type.FIELD[i][j] == Cell.FILLED:
+            if shape_type.START_POS[i][j] == Cell.FILLED:
                 pg.draw.rect(screen, color, bbox)
 
             pg.draw.rect(screen, border_color, bbox, 1)
@@ -29,8 +29,8 @@ def show_shape(screen, shape_type, x, y, cell_size):
     pg.draw.rect(
         screen, border_color, (
             x, y,
-            cell_size * shape_type.WIDTH + 2 * offset,
-            cell_size * shape_type.HEIGHT + 2 * offset
+            cell_size * shape_type.START_WIDTH + 2 * offset,
+            cell_size * shape_type.START_HEIGHT + 2 * offset
         ), 3
     )
 
