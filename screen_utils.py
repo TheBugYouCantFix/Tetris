@@ -1,9 +1,23 @@
 import pygame as pg
 import sys
+import ctypes
 
 from utils import load_image
 from utils import colors
 from cell import Cell
+
+
+def set_up_taskbar_image():
+    # This function lets you display the app icon in the taskbar(which isn't being displayed by default)
+    app_id = u'mycompany.myproduct.subproduct.version'  # arbitrary string
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
+
+
+def set_icon():
+    path = './data/assets/icon.png'
+
+    icon = pg.image.load(path)
+    pg.display.set_icon(icon)
 
 
 def show_shape(screen, shape_type, x, y, cell_size):

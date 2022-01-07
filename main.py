@@ -7,7 +7,7 @@ from utils import colors, play_sound
 from shape import Shape
 
 from screen_utils import \
-    game_over_screen, show_parameter, show_shape
+    game_over_screen, show_parameter, show_shape, set_icon, set_up_taskbar_image
 
 
 def main():
@@ -30,6 +30,8 @@ def main():
 
     ticks = 0
     speed = 30
+
+    set_icon()
 
     background_image = pg.image.load('./data/assets/bg.jpg')
 
@@ -107,4 +109,5 @@ def main():
 
 
 if __name__ == '__main__':
+    set_up_taskbar_image()
     main()
