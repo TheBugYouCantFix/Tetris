@@ -16,7 +16,7 @@ def main():
     cell_size = 30
     offset = 100
     size = Field.WIDTH * cell_size + 2 * offset, \
-           Field.HEIGHT * cell_size + offset
+           Field.HEIGHT * cell_size + offset  # 500x700
 
     offset_x, offset_y = offset // 5, cell_size
 
@@ -64,7 +64,7 @@ def main():
                     shape.drop()
 
         screen.fill(colors.get('black'))
-        # screen.blit(background_image, (0, 0))
+        screen.blit(background_image, (0, 0))
         field.render()
 
         x, y = cell_size * field.WIDTH + offset_x + 20, offset_y + 50
@@ -86,7 +86,8 @@ def main():
             if shape.game_over():
                 play_sound('data/sounds/game_over.wav')
                 screen.fill(colors.get('black'))
-                game_over_screen(size, screen, timer, FPS, field)
+                game_over_screen(size, screen, timer, FPS, field, field.points)
+                field.nullify_params()
 
             shape.normalize_position()
 

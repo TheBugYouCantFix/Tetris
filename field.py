@@ -65,6 +65,10 @@ class Field:
             [Cell.EMPTY for _ in range(self.WIDTH)] for _ in range(self.HEIGHT)
         ]
 
+    def nullify_params(self):
+        self.points = 0
+        self.lines = 0
+
     def n_points(self, rows_filled: int) -> int:
         points_list = [100, 300]
 

@@ -74,13 +74,13 @@ def terminate():
     sys.exit()
 
 
-def game_over_screen(screen_size, screen, clock, fps, field):
-    text = ["Game over"]
+def game_over_screen(screen_size, screen, clock, fps, field, points):
+    text_list = ["Game over", f"Points: {points}"]
 
     font = pg.font.Font(None, 50)
     text_coord = 250
 
-    for line in text:
+    for line in text_list:
         string_rendered = font.render(line, 1, pg.Color('white'))
         rect = string_rendered.get_rect()
         text_coord += 10
