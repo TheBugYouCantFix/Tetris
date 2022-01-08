@@ -6,8 +6,11 @@ from field import Field
 from utils import colors, play_sound
 from shape import Shape
 
+from db_manager import DbManager
+
 from screen_utils import \
-    game_over_screen, show_parameter, show_shape, set_icon, set_up_taskbar_image
+    game_over_screen, show_parameter, show_shape,\
+    set_icon, set_up_taskbar_image, show_background_image
 
 
 def main():
@@ -26,14 +29,15 @@ def main():
     field = Field(screen, cell_size, offset_x, offset_y)
 
     timer = pg.time.Clock()
+
+    db = DbManager()
+
     FPS = 60
 
     ticks = 0
     speed = 30
 
     set_icon()
-
-    background_image = pg.image.load('./data/assets/bg.jpg')
 
     running = True
 
@@ -64,7 +68,7 @@ def main():
                     shape.drop()
 
         screen.fill(colors.get('black'))
-        screen.blit(background_image, (0, 0))
+        show_background_image(screen)
         field.render()
 
         x, y = cell_size * field.WIDTH + offset_x + 20, offset_y + 50
@@ -86,7 +90,13 @@ def main():
             if shape.game_over():
                 play_sound('data/sounds/game_over.wav')
                 screen.fill(colors.get('black'))
-                game_over_screen(size, screen, timer, FPS, field, field.points)
+
+                score = field.points
+                db.add_score(score)
+
+                best_score = db.get_max_score()
+
+                game_over_screen(screen, timer, FPS, field, score, best_score)
                 field.nullify_params()
 
             shape.normalize_position()

@@ -2,7 +2,6 @@ import pygame as pg
 import sys
 import ctypes
 
-from utils import load_image
 from utils import colors
 from cell import Cell
 
@@ -18,6 +17,11 @@ def set_icon():
 
     icon = pg.image.load(path)
     pg.display.set_icon(icon)
+
+
+def show_background_image(screen):
+    background_image = pg.image.load('./data/assets/bg.jpg')
+    screen.blit(background_image, (0, 0))
 
 
 def show_shape(screen, shape_type, x, y, cell_size):
@@ -74,8 +78,10 @@ def terminate():
     sys.exit()
 
 
-def game_over_screen(screen_size, screen, clock, fps, field, points):
-    text_list = ["Game over", f"Points: {points}"]
+def game_over_screen(screen, clock, fps, field, score, best_score):
+    show_background_image(screen)
+
+    text_list = ["Game over", f"Score: {score}", f"Best score: {best_score}"]
 
     font = pg.font.Font(None, 50)
     text_coord = 250
@@ -85,7 +91,7 @@ def game_over_screen(screen_size, screen, clock, fps, field, points):
         rect = string_rendered.get_rect()
         text_coord += 10
         rect.top = text_coord
-        rect.x = 10
+        rect.x = 150
         text_coord += rect.height
         screen.blit(string_rendered, rect)
 

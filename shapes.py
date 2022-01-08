@@ -83,7 +83,7 @@ class TwoTwo:
     * * _
     """
 
-    COLOR = colors.get('dark green')
+    COLOR = colors.get('green')
     WIDTH, HEIGHT = 3, 2
 
     FIELD = [
