@@ -7,9 +7,13 @@ class DbManager:
         self.cursor = self.connect.cursor()
 
     def add_score(self, score):
-        self.cursor.execute(
-            "INSERT INTO points(points) VALUES(?)", (score, )
-        )
+        max_score = self.get_max_score()
+
+        # adding only the first or a bigger values
+        if max_score is None or score > max_score:
+            self.cursor.execute(
+                "INSERT INTO points(points) VALUES(?)", (score, )
+            )
 
         self.connect.commit()
 

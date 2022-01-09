@@ -3,6 +3,9 @@ from utils import colors
 
 from random import choice
 
+import pygame as pg
+
+
 # "*" = filled; "_" = empty
 
 
@@ -12,7 +15,7 @@ class Square:
     **
     """
 
-    COLOR = colors.get('light yellow')
+    COLOR = pg.Color(*colors.get('light yellow'))
     WIDTH, HEIGHT = 2, 2
 
     FIELD = [
@@ -24,7 +27,7 @@ class Square:
 class Line:
     # ****
 
-    COLOR = colors.get('cyan')
+    COLOR = pg.Color(*colors.get('cyan'))
     WIDTH, HEIGHT = 4, 1
 
     FIELD = [
@@ -39,7 +42,7 @@ class ThreeOne:
     _ * _
     """
 
-    COLOR = colors.get('purple')
+    COLOR = pg.Color(*colors.get('purple'))
     WIDTH, HEIGHT = 3, 2
 
     FIELD = [
@@ -54,7 +57,7 @@ class OneThree:
     * * *
     """
 
-    COLOR = colors.get('orange')
+    COLOR = pg.Color(*colors.get('orange'))
     WIDTH, HEIGHT = 3, 2
 
     FIELD = [
@@ -62,13 +65,14 @@ class OneThree:
         [Cell.FILLED, Cell.FILLED, Cell.FILLED]
     ]
 
+
 class OneThreeMirrored:
     """
     * _ _
     * * *
     """
 
-    COLOR = colors.get('light green')
+    COLOR = pg.Color(*colors.get('light green'))
     WIDTH, HEIGHT = 3, 2
 
     FIELD = [
@@ -83,7 +87,7 @@ class TwoTwo:
     * * _
     """
 
-    COLOR = colors.get('green')
+    COLOR = pg.Color(*colors.get('green'))
     WIDTH, HEIGHT = 3, 2
 
     FIELD = [
@@ -98,7 +102,7 @@ class TwoTwoMirrored:
     _ * *
     """
 
-    COLOR = colors.get('red')
+    COLOR = pg.Color(*colors.get('red'))
     WIDTH, HEIGHT = 3, 2
 
     FIELD = [
@@ -108,8 +112,8 @@ class TwoTwoMirrored:
 
 
 SHAPES = (
-        Square, Line, ThreeOne, OneThree, OneThreeMirrored, TwoTwo, TwoTwoMirrored
-    )
+    Square, Line, ThreeOne, OneThree, OneThreeMirrored, TwoTwo, TwoTwoMirrored
+)
 
 
 def random_shape_type():

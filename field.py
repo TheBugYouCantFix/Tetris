@@ -56,7 +56,22 @@ class Field:
                 cell = self.field[y][x]
 
                 if cell != Cell.EMPTY:
-                    pg.draw.rect(self.screen, cell, bbox)
+                    color = pg.Color(*cell)
+                    hsv = color.hsva
+                    color.hsva = (hsv[0], hsv[1], hsv[2] - 30, hsv[3])
+
+                    pg.draw.rect(self.screen, color, bbox)  # drawing darker and bigger square (a shade)
+
+                    hsv = color.hsva
+                    color.hsva = (hsv[0], hsv[1], hsv[2] + 30, hsv[3])
+
+                    offset = 4
+                    bbox2 = (x * self.cell_size + self.offset_x + offset,
+                             y * self.cell_size + self.offset_y + offset,
+                             self.cell_size - 2 * offset,
+                             self.cell_size - 2 * offset)
+
+                    pg.draw.rect(self.screen, color, bbox2)  # drawing lighter and smaller square
 
                 pg.draw.rect(self.screen, border_color, bbox, line_size)
 
