@@ -9,7 +9,7 @@ from shape import Shape
 from db_manager import DbManager
 
 from screen_utils import \
-    game_over_screen, show_parameter, show_shape,\
+    game_over_screen, show_parameter, show_shape, \
     set_icon, set_up_taskbar_image, show_background_image
 
 
@@ -36,6 +36,11 @@ def main():
 
     ticks = 0
     speed = 30
+
+    points_step = 500
+    points_for_next_speed_increase = points_step
+
+    SPEED_DELTA = 2
 
     set_icon()
 
@@ -106,6 +111,12 @@ def main():
             next_shape_type = random_shape_type()
 
             shape = Shape(shape_type, field, next_shape_type)
+
+        if field.points >= points_for_next_speed_increase:
+            speed -= SPEED_DELTA  # we extract the delta as the less the value of speed var is the faster shape falls
+            points_for_next_speed_increase += points_step
+
+            play_sound('./data/sounds/speed_increase.mp3')
 
         if ticks >= speed:
             shape.fall()
