@@ -3,10 +3,14 @@ import pygame as pg
 from shapes import random_shape_type
 
 from field import Field
-from utils import colors, play_sound
+from utils import colors
 from shape import Shape
 
 from db_manager import DbManager
+from music_player import MusicPlayer
+
+from config import \
+    CELL_SIZE, OFFSET, FPS, points_step, SPEED_DELTA
 
 from screen_utils import \
     game_over_screen, show_parameter, show_shape, \
@@ -16,31 +20,28 @@ from screen_utils import \
 def main():
     pg.init()
 
-    cell_size = 30
-    offset = 100
-    size = Field.WIDTH * cell_size + 2 * offset, \
-           Field.HEIGHT * cell_size + offset  # 500x700
+    mp = MusicPlayer()
 
-    offset_x, offset_y = offset // 5, cell_size
+    mp.play_bg_music()
+
+    size = Field.WIDTH * CELL_SIZE + 2 * OFFSET, \
+           Field.HEIGHT * CELL_SIZE + OFFSET  # 500x700
+
+    offset_x, offset_y = OFFSET // 5, CELL_SIZE
 
     screen = pg.display.set_mode(size)
     pg.display.set_caption('Tetris')
 
-    field = Field(screen, cell_size, offset_x, offset_y)
-
-    timer = pg.time.Clock()
-
-    db = DbManager()
-
-    FPS = 60
+    field = Field(screen, CELL_SIZE, offset_x, offset_y, mp)
 
     ticks = 0
     speed = 30
 
-    points_step = 500
     points_for_next_speed_increase = points_step
 
-    SPEED_DELTA = 2
+    timer = pg.time.Clock()
+
+    db = DbManager()
 
     set_icon()
 
@@ -49,9 +50,9 @@ def main():
     shape_type = random_shape_type()
     next_shape_type = random_shape_type()
 
-    shape = Shape(shape_type, field, next_shape_type)
+    shape = Shape(shape_type, field, next_shape_type, mp)
 
-    play_sound('./data/sounds/start.mp3')
+    mp.play_sound('./data/sounds/start.mp3')
 
     while running:
         for event in pg.event.get():
@@ -76,8 +77,8 @@ def main():
         show_background_image(screen)
         field.render()
 
-        x, y = cell_size * field.WIDTH + offset_x + 20, offset_y + 50
-        show_shape(screen, next_shape_type, x, y, cell_size)
+        x, y = CELL_SIZE * field.WIDTH + offset_x + 20, offset_y + 50
+        show_shape(screen, next_shape_type, x, y, CELL_SIZE)
 
         y = offset_y + 200
         show_parameter(screen, "Points", field.points, x, y)
@@ -88,12 +89,13 @@ def main():
         if shape.collided:
 
             if not shape.dropped:
-                play_sound('data/sounds/hit.mp3')
+                mp.play_sound('data/sounds/hit.mp3')
 
-            field.check_full_rows(shape)
+            field.check_full_rows(shape, field.points, points_for_next_speed_increase)
 
             if shape.game_over():
-                play_sound('data/sounds/game_over.wav')
+                mp.pause_bg_music()
+                mp.play_sound('data/sounds/game_over.wav')
                 screen.fill(colors.get('black'))
 
                 score = field.points
@@ -101,7 +103,7 @@ def main():
 
                 best_score = db.get_max_score()
 
-                game_over_screen(screen, timer, FPS, field, score, best_score)
+                game_over_screen(screen, timer, FPS, field, score, best_score, mp)
                 field.nullify_params()
 
             shape.normalize_position()
@@ -110,13 +112,13 @@ def main():
             shape_type = shape.next_type
             next_shape_type = random_shape_type()
 
-            shape = Shape(shape_type, field, next_shape_type)
+            shape = Shape(shape_type, field, next_shape_type, mp)
 
         if field.points >= points_for_next_speed_increase:
             speed -= SPEED_DELTA  # we extract the delta as the less the value of speed var is the faster shape falls
             points_for_next_speed_increase += points_step
 
-            play_sound('./data/sounds/speed_increase.mp3')
+            mp.play_sound('./data/sounds/speed_increase.mp3')
 
         if ticks >= speed:
             shape.fall()

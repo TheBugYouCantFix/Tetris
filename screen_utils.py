@@ -78,7 +78,7 @@ def terminate():
     sys.exit()
 
 
-def game_over_screen(screen, clock, fps, field, score, best_score):
+def game_over_screen(screen, clock, fps, field, score, best_score, mp):
     show_background_image(screen)
 
     text_list = ["Game over", f"Score: {score}", f"Best score: {best_score}"]
@@ -101,6 +101,7 @@ def game_over_screen(screen, clock, fps, field, score, best_score):
                 terminate()
             if event.type == pg.KEYDOWN:
                 field.clear()
+                mp.play_bg_music()
                 return
 
         pg.display.flip()

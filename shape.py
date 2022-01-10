@@ -4,8 +4,6 @@ from cell import Cell
 from field import Field
 from shapes import SHAPES
 
-from utils import play_sound
-
 
 class Shape:
 
@@ -13,11 +11,13 @@ class Shape:
         shape.START_POS = shape.FIELD
         shape.START_WIDTH, shape.START_HEIGHT = shape.WIDTH, shape.HEIGHT
 
-    def __init__(self, shape_type, field, next_type):
+    def __init__(self, shape_type, field, next_type, mp):
         self.shape = shape_type()
         self.field = field
 
         self.next_type = next_type
+
+        self.mp = mp
 
         self.collided = False
         self.dropped = False  # shows whether the shape was dropped(space key)
@@ -113,7 +113,7 @@ class Shape:
         while not self.collided:
             self.fall()
 
-        play_sound('./data/sounds/drop.mp3')
+        self.mp.play_sound('./data/sounds/drop.mp3')
 
     @staticmethod
     def rotated_arr(arr):
@@ -153,7 +153,7 @@ class Shape:
 
         self.set_shape()
 
-        play_sound('./data/sounds/shape_rotate.mp3')
+        self.mp.play_sound('./data/sounds/shape_rotate.mp3')
 
     def normalize_position(self):
         shape_type = type(self.shape)

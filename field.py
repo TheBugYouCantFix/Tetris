@@ -1,7 +1,7 @@
 import pygame as pg
 
 from cell import Cell
-from utils import colors, play_sound
+from utils import colors
 
 from time import sleep
 
@@ -10,11 +10,13 @@ class Field:
     WIDTH = 10
     HEIGHT = 20
 
-    def __init__(self, screen, cell_size, offset_x, offset_y):
+    def __init__(self, screen, cell_size, offset_x, offset_y, mp):
         self.cell_size = cell_size
 
         self.offset_x = offset_x
         self.offset_y = offset_y
+
+        self.mp = mp
 
         self.field = [
             [Cell.EMPTY for _ in range(self.WIDTH)] for _ in range(self.HEIGHT)
@@ -111,7 +113,7 @@ class Field:
         pg.draw.rect(self.screen, color, bbox)
         pg.display.flip()
 
-    def check_full_rows(self, shape):
+    def check_full_rows(self, shape, cur_pts, increase_pts):
         counter = 0
         start = None
 
@@ -139,7 +141,8 @@ class Field:
             for _ in range(counter):
                 self.push_rows_down(start + counter - 1)
 
-            play_sound('data/sounds/drop.wav')
-
             self.points += self.n_points(counter)
             self.lines += counter
+
+            if cur_pts < increase_pts:
+                self.mp.play_sound('data/sounds/drop.wav')
