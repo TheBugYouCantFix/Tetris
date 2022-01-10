@@ -121,6 +121,9 @@ class Shape:
         return list(zip(*arr[::-1]))
 
     def rotate_90deg_clockwise(self):
+        if self.collided:
+            return
+
         shape_type = type(self.shape)
         old_position = deepcopy(shape_type.FIELD)
 
