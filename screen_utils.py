@@ -81,7 +81,15 @@ def terminate():
 def game_over_screen(screen, clock, fps, field, score, best_score, mp):
     show_background_image(screen)
 
-    text_list = ["Game over", f"Score: {score}", f"Best score: {best_score}"]
+    game_over_font = pg.font.Font(None, 70)
+    y = 180
+    string = game_over_font.render("Game over", 1, pg.Color('red'))
+    rect = string.get_rect()
+    rect.top = y
+    rect.x = 100
+    screen.blit(string, rect)
+
+    text_list = [f"Score: {score}", f"Best score: {best_score}"]
 
     font = pg.font.Font(None, 50)
     text_coord = 250
@@ -91,9 +99,17 @@ def game_over_screen(screen, clock, fps, field, score, best_score, mp):
         rect = string_rendered.get_rect()
         text_coord += 10
         rect.top = text_coord
-        rect.x = 150
+        rect.x = 120
         text_coord += rect.height
         screen.blit(string_rendered, rect)
+
+    restart_font = pg.font.Font(None, 40)
+    y = 600
+    string = restart_font.render("Press any key to try again...", 1, pg.Color('white'))
+    rect = string.get_rect()
+    rect.top = y
+    rect.x = 70
+    screen.blit(string, rect)
 
     while True:
         for event in pg.event.get():
