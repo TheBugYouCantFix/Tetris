@@ -128,21 +128,23 @@ class Field:
             elif counter > 0:
                 break
 
-        if counter > 0:
-            shape.collided = True
+        if not counter:
+            return
 
-            for i in range(start, start + counter):
-                self.make_row_white(i)
-            sleep(0.3)
+        shape.collided = True
 
-            for i in range(start, start + counter):
-                self.field[i] = [Cell.EMPTY for _ in range(self.WIDTH)]
+        for i in range(start, start + counter):
+            self.make_row_white(i)
+        sleep(0.3)
 
-            for _ in range(counter):
-                self.push_rows_down(start + counter - 1)
+        for i in range(start, start + counter):
+            self.field[i] = [Cell.EMPTY for _ in range(self.WIDTH)]
 
-            self.points += self.n_points(counter)
-            self.lines += counter
+        for _ in range(counter):
+            self.push_rows_down(start + counter - 1)
 
-            if cur_pts < increase_pts:
-                self.mp.play_sound('data/sounds/drop.wav')
+        self.points += self.n_points(counter)
+        self.lines += counter
+
+        if cur_pts < increase_pts:
+            self.mp.play_sound('data/sounds/drop.wav')

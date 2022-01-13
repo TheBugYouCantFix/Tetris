@@ -1,9 +1,13 @@
 import pygame as pg
+import pygame_widgets as pw
+
 import sys
 import ctypes
 
 from utils import colors
 from cell import Cell
+
+from pygame_widgets.button import Button
 
 
 def set_up_taskbar_image():
@@ -103,22 +107,24 @@ def game_over_screen(screen, clock, fps, field, score, best_score, mp):
         text_coord += rect.height
         screen.blit(string_rendered, rect)
 
-    restart_font = pg.font.Font(None, 40)
-    y = 600
-    string = restart_font.render("Press any key to try again...", 1, pg.Color('white'))
-    rect = string.get_rect()
-    rect.top = y
-    rect.x = 70
-    screen.blit(string, rect)
+    button = Button(
+        screen, 130, 500, 200, 150, text='Retry',
+        fontSize=50, margin=20,
+        inactiveColour=colors.get('red'), radius=20,
+    )
 
     while True:
-        for event in pg.event.get():
+        events = pg.event.get()
+        for event in events:
             if event.type == pg.QUIT:
                 terminate()
-            if event.type == pg.KEYDOWN:
-                field.clear()
-                mp.play_bg_music()
-                return
 
+        if button.clicked:
+            field.clear()
+            mp.play_bg_music()
+            return
+
+        pw.update(events)
+        button.draw()
         pg.display.flip()
         clock.tick(fps)
