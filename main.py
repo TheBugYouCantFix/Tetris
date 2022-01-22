@@ -13,7 +13,7 @@ from config import \
     CELL_SIZE, OFFSET, FPS, points_step, SPEED_DELTA
 
 from screen_utils import \
-    game_over_screen, show_parameter, show_shape, \
+    start_screen, game_over_screen, show_parameter, show_shape, \
     set_icon, set_up_taskbar_image, show_background_image
 
 
@@ -21,8 +21,6 @@ def main():
     pg.init()
 
     mp = MusicPlayer()
-
-    mp.play_bg_music()
 
     size = Field.WIDTH * CELL_SIZE + 2 * OFFSET, \
            Field.HEIGHT * CELL_SIZE + OFFSET  # 500x700
@@ -39,7 +37,7 @@ def main():
 
     points_for_next_speed_increase = points_step
 
-    timer = pg.time.Clock()
+    clock = pg.time.Clock()
 
     db = DbManager()
 
@@ -52,6 +50,9 @@ def main():
 
     shape = Shape(shape_type, field, next_shape_type, mp)
 
+    start_screen(screen, clock, FPS)
+
+    mp.play_bg_music()
     mp.play_sound('./data/sounds/start.mp3')
 
     while running:
@@ -103,7 +104,7 @@ def main():
 
                 best_score = db.get_max_score()
 
-                game_over_screen(screen, timer, FPS, field, score, best_score, mp)
+                game_over_screen(screen, clock, FPS, field, score, best_score, mp)
                 field.nullify_params()
 
             shape.normalize_position()
@@ -124,7 +125,7 @@ def main():
             shape.fall()
             ticks = 0
 
-        timer.tick(FPS)
+        clock.tick(FPS)
         ticks += 1
 
         pg.display.flip()

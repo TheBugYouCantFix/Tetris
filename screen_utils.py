@@ -16,15 +16,18 @@ def set_up_taskbar_image():
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
 
 
-def set_icon():
-    path = './data/assets/icon.png'
+path = './data/assets/icon.png'
 
+
+def set_icon():
     icon = pg.image.load(path)
     pg.display.set_icon(icon)
 
 
+background_image = pg.image.load('./data/assets/bg.jpg')
+
+
 def show_background_image(screen):
-    background_image = pg.image.load('./data/assets/bg.jpg')
     screen.blit(background_image, (0, 0))
 
 
@@ -82,14 +85,58 @@ def terminate():
     sys.exit()
 
 
+def start_screen(screen, clock, fps):
+    show_background_image(screen)
+
+    title_font = pg.font.Font(None, 150)
+    string = title_font.render("Tetris", 1, pg.Color('red'))
+    rect = string.get_rect()
+    rect.top = 100
+    rect.x = 100
+    screen.blit(string, rect)
+
+    text_list = ['W, A, S, D / arrow keys - movement', 'Space - drop a shape']
+
+    font = pg.font.Font(None, 35)
+    text_coord = 300
+
+    for line in text_list:
+        string_rendered = font.render(line, 1, pg.Color('white'))
+        rect = string_rendered.get_rect()
+        text_coord += 10
+        rect.top = text_coord
+        rect.x = 50
+        text_coord += rect.height
+        screen.blit(string_rendered, rect)
+
+    button = Button(
+        screen, 130, 500, 200, 150, text='Start',
+        fontSize=50, margin=20,
+        inactiveColour=colors.get('orange'), radius=20,
+    )
+
+    while True:
+        events = pg.event.get()
+        for event in events:
+            if event.type == pg.QUIT:
+                terminate()
+
+        if button.clicked:
+            return
+
+        pw.update(events)
+        button.draw()
+        pg.display.flip()
+        clock.tick(fps)
+
+
 def game_over_screen(screen, clock, fps, field, score, best_score, mp):
     show_background_image(screen)
 
     game_over_font = pg.font.Font(None, 70)
-    y = 180
     string = game_over_font.render("Game over", 1, pg.Color('red'))
     rect = string.get_rect()
-    rect.top = y
+    rect.top = 180
     rect.x = 100
     screen.blit(string, rect)
 
