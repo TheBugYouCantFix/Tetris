@@ -1,9 +1,14 @@
 import sqlite3
+import os.path
 
 
 class DbManager:
     def __init__(self):
-        self.connect = sqlite3.connect('./db/points.sqlite')
+        path = os.path.abspath('./db/points.sqlite')
+        # Leave this out if the file doesn't exist yet
+        assert os.path.exists(path), "The file doesn't exist"
+
+        self.connect = sqlite3.connect(path)
         self.cursor = self.connect.cursor()
 
     def add_score(self, score):

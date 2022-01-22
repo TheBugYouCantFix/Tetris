@@ -1,13 +1,26 @@
 import pygame as pg
 import pygame_widgets as pw
 
-import sys
 import ctypes
+
+import sys
+import os
+
 
 from utils import colors
 from cell import Cell
 
 from pygame_widgets.button import Button
+
+
+def resource_path(relative_path):
+    try:
+    # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 def set_up_taskbar_image():
@@ -16,15 +29,16 @@ def set_up_taskbar_image():
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
 
 
-path = './data/assets/icon.png'
+icon_path = resource_path('./data/assets/icon.png')
+icon = pg.image.load(icon_path)
 
 
 def set_icon():
-    icon = pg.image.load(path)
     pg.display.set_icon(icon)
 
 
-background_image = pg.image.load('./data/assets/bg.jpg')
+bg_path = resource_path('./data/assets/bg.jpg')
+background_image = pg.image.load(bg_path)
 
 
 def show_background_image(screen):
